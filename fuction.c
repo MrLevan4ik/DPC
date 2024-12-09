@@ -13,7 +13,7 @@
 #define MAX_LINES 100
 #define LINE_LENGTH 256
 
-char programVersion[] = "0.2";
+char programVersion[] = "0.3";
 
 // Список команд
 Command commands[] = {
