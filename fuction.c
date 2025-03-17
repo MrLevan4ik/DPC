@@ -108,7 +108,7 @@ void cd_command(char *arg[]) {
 // Создание папки
 void mkdir_command(char *arg[]) {
     if (arg != NULL && arg[0] != NULL) {
-        if (mkdir(arg[0], 0777) == 0) {
+        if (mkdir(arg[0]) == 0) {
             printf("Папка %s создана.\n", arg[0]);
         } else {
             perror("Ошибка при создании папки");
