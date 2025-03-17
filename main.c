@@ -3,9 +3,13 @@
 #include <string.h>
 #include <locale.h>
 #include <stdlib.h>
+#include <windows.h>
 #include "function.h"
 
 int main() {
+    SetConsoleCP(65001);
+    SetConsoleOutputCP(65001);
+    setlocale(LC_ALL, "Russian_Russia.UTF8");
     char input[100]; // Переменная для ввода
     char *args[10];  // Массивnn аргументов
     bool state = true;

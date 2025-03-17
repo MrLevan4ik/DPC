@@ -30,7 +30,8 @@ Command commands[] = {
     {"rm", "Удаляет файл или папку", rm_command},
     {"ls", "Отображает список файлов и папок в текущей директории", ls_command},
     {"read", "Читает содержимое файла", read_file_command},
-    {"pwd", "Отображает текущий путь", pwd_command}
+    {"pwd", "Отображает текущий путь", pwd_command},
+    {"exit", "Завершает работу программы", exit_command}
 };
 
 // Функция-обработчик для команды "print"
@@ -216,5 +217,15 @@ void execute_command(char *first_word, char **args) {
     }
     if (i == sizeof(commands) / sizeof(Command)) {
         printf("Команды %s не существует\n", first_word);
+    }
+}
+
+// Функция для выхода из программы
+void exit_command(char *arg[]) {
+    if (arg == NULL || arg[0] == NULL) {
+        printf("Завершение работы программы...\n");
+        exit(0);
+    } else {
+        printf("Неверный ввод\n");
     }
 }
