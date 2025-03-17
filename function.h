@@ -24,6 +24,7 @@ void read_file_command(char *arg[]);
 void pwd_command(char *arg[]);
 void greeting_command(char *arg[]);
 void exit_command(char *arg[]);
+void title_command(char *arg[]);
 
 void execute_command(char *first_word, char **args);
 
