@@ -41,7 +41,10 @@ void print_command(char *arg[]) {
     if (arg != NULL) {
         int i = 0;
         while (arg[i] != NULL) {
-            printf("%s ", arg[i]);
+            printf("%s", arg[i]);
+            if (arg[i + 1] != NULL) {
+                printf(" ");
+            }
             i++;
         }
         printf("\n");
@@ -98,10 +101,15 @@ void clear_command(char *arg[]) {
 // Перемещение по директории
 void cd_command(char *arg[]) {
     if (arg != NULL && arg[0] != NULL) {
-        if (chdir(arg[0]) == 0) {
-            printf("Перешли в директорию: %s\n", arg[0]);
+        struct stat st;
+        if (stat(arg[0], &st) == 0 && S_ISDIR(st.st_mode)) {
+            if (chdir(arg[0]) == 0) {
+                printf("Перешли в директорию: %s\n", arg[0]);
+            } else {
+                perror("Ошибка при переходе");
+            }
         } else {
-            perror("Ошибка при переходе");
+            printf("Директория не существует: %s\n", arg[0]);
         }
     } else {
         printf("Не указана директория.\n");
@@ -124,12 +132,17 @@ void mkdir_command(char *arg[]) {
 // Создание файла
 void create_file_command(char *arg[]) {
     if (arg != NULL && arg[0] != NULL) {
-        FILE *file = fopen(arg[0], "w");
-        if (file) {
-            printf("Файл %s создан.\n", arg[0]);
-            fclose(file);
+        struct stat st;
+        if (stat(arg[0], &st) != 0) {
+            FILE *file = fopen(arg[0], "w");
+            if (file) {
+                printf("Файл %s создан.\n", arg[0]);
+                fclose(file);
+            } else {
+                perror("Ошибка при создании файла");
+            }
         } else {
-            perror("Ошибка при создании файла");
+            printf("Файл уже существует: %s\n", arg[0]);
         }
     } else {
         printf("Не указано имя файла.\n");
@@ -139,10 +152,15 @@ void create_file_command(char *arg[]) {
 // Удаление папки/файла
 void rm_command(char *arg[]) {
     if (arg != NULL && arg[0] != NULL) {
-        if (remove(arg[0]) == 0) {
-            printf("Файл или папка %s удалены.\n", arg[0]);
+        struct stat st;
+        if (stat(arg[0], &st) == 0) {
+            if (remove(arg[0]) == 0) {
+                printf("Файл или папка %s удалены.\n", arg[0]);
+            } else {
+                perror("Ошибка при удалении");
+            }
         } else {
-            perror("Ошибка при удалении");
+            printf("Файл или папка не существуют: %s\n", arg[0]);
         }
     } else {
         printf("Не указано имя файла или папки.\n");
@@ -171,7 +189,7 @@ void read_file_command(char *arg[]) {
     if (arg != NULL && arg[0] != NULL) {
         FILE *file = fopen(arg[0], "r");
         if (file) {
-            char line[256];
+            char line[LINE_LENGTH];
             printf("Содержимое файла %s:\n", arg[0]);
             while (fgets(line, sizeof(line), file)) {
                 printf("%s", line);
