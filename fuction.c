@@ -9,6 +9,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <stdbool.h>
+#include <windows.h>
 
 #define MAX_LINES 100
 #define LINE_LENGTH 256
@@ -31,7 +32,8 @@ Command commands[] = {
     {"ls", "Отображает список файлов и папок в текущей директории", ls_command},
     {"read", "Читает содержимое файла", read_file_command},
     {"pwd", "Отображает текущий путь", pwd_command},
-    {"exit", "Завершает работу программы", exit_command}
+    {"exit", "Завершает работу программы", exit_command},
+    {"title", "Изменяет заголовок окна консоли", title_command}
 };
 
 // Функция-обработчик для команды "print"
@@ -227,5 +229,31 @@ void exit_command(char *arg[]) {
         exit(0);
     } else {
         printf("Неверный ввод\n");
+    }
+}
+
+// Функция для изменения заголовка окна
+void title_command(char *arg[]) {
+    if (arg != NULL && arg[0] != NULL) {
+        // Объединяем все аргументы в одну строку
+        char title[256] = "";
+        int i = 0;
+        while (arg[i] != NULL) {
+            strcat(title, arg[i]);
+            if (arg[i + 1] != NULL) {
+                strcat(title, " ");
+            }
+            i++;
+        }
+        
+        // Конвертируем ANSI строку в UTF-16
+        wchar_t wtitle[256];
+        MultiByteToWideChar(CP_UTF8, 0, title, -1, wtitle, 256);
+        
+        // Устанавливаем заголовок окна
+        SetConsoleTitleW(wtitle);
+        printf("Заголовок окна изменен на: %s\n", title);
+    } else {
+        printf("Не указан текст для заголовка.\n");
     }
 }
